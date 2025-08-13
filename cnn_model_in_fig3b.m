@@ -1,0 +1,46 @@
+%CNN model in Fig.3(b)
+%fresnelLayer is the net model of Fresnel diffraction process
+%multiLayer is the net model of SPI process
+%fresnelLayer: Qr=real(Q);Qi=image(Q); Definition of Q is in the manuscript
+%multiLayer: PATTERNS is the matrix of illumination patterns
+% If the phase image is 64*64, the sampling number N=2000, the size of
+% PATTERNS is 2000*4096
+layers = [
+    imageInputLayer([1 1 a000],"Name","imageinput",Normalization="none")
+    transposedConv2dLayer([3 3],512,"Name","transposed-conv_1","Cropping","same","Stride",[2 2])
+    batchNormalizationLayer("Name","batchnorm_1")
+    leakyReluLayer(0.001,"Name","leakyrelu_1")
+    transposedConv2dLayer([3 3],256,"Name","transposed-conv_2","Cropping","same","Stride",[2 2])
+    batchNormalizationLayer("Name","batchnorm_2")
+    leakyReluLayer(0.001,"Name","leakyrelu_2")
+    transposedConv2dLayer([3 3],128,"Name","transposed-conv_3","Cropping","same","Stride",[2 2])
+    batchNormalizationLayer("Name","batchnorm_3")
+    leakyReluLayer(0.001,"Name","leakyrelu_3")
+    transposedConv2dLayer([3 3],128,"Name","transposed-conv_4","Cropping","same","Stride",[2 2])
+    batchNormalizationLayer("Name","batchnorm_4")
+    leakyReluLayer(0.0001,"Name","leakyrelu_4")
+    transposedConv2dLayer([3 3],128,"Name","transposed-conv_5","Cropping","same","Stride",[2 2])
+    batchNormalizationLayer("Name","batchnorm_5")
+    leakyReluLayer(0.0001,"Name","leakyrelu_5")
+    transposedConv2dLayer([3 3],128,"Name","transposed-conv_6","Cropping","same","Stride",[2 2])
+    batchNormalizationLayer("Name","batchnorm_6")
+    leakyReluLayer(0.0001,"Name","leakyrelu_6")
+    convolution2dLayer([3 3],128,"Name","conv_1","Padding","same")
+    batchNormalizationLayer("Name","batchnorm_7")
+    leakyReluLayer(0.0001,"Name","leakyrelu_7")
+    convolution2dLayer([3 3],128,"Name","conv_2","Padding","same")
+    batchNormalizationLayer("Name","batchnorm_8")
+    leakyReluLayer(0.0001,"Name","leakyrelu_8")
+    convolution2dLayer([3 3],128,"Name","conv_3","Padding","same")
+    batchNormalizationLayer("Name","batchnorm_9")
+    leakyReluLayer(0.0001,"Name","leakyrelu_9")
+    convolution2dLayer([3 3],128,"Name","conv_4","Padding","same")
+    batchNormalizationLayer("Name","batchnorm_10")
+    leakyReluLayer(0.0001,"Name","leakyrelu_10")
+    convolution2dLayer([3 3],1,"Name","conv_5","Padding","same")
+    batchNormalizationLayer("Name","batchnorm_11")
+    leakyReluLayer(0.0001,"Name","leakyrelu_11")
+    layerNormalizationLayer("Name","layernorm")
+    fresnelLayer(inputSize,outputSize,Qr,Qi,'Name','I')
+    multiLayer(PATTERNS,"Name",'IO')
+    ];
